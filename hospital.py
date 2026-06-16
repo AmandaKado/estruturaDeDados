@@ -8,7 +8,7 @@ primeiroFila = None
 contadorVerde = 1
 contadorAmarelo = 201
 
-def inserirVerde(paciente):
+def inserirSemPrioridade(paciente):
     global primeiroFila
     atual = primeiroFila
     
@@ -16,27 +16,27 @@ def inserirVerde(paciente):
         atual = atual.proximo
     atual.proximo = paciente
     
-def inserirAmarelo(paciente):
+def inserirComPrioridade(paciente):
     global primeiroFila
 
-    if primeiroFila.cor is None:
+    if primeiroFila.cor == "V":
+        paciente.proximo = primeiroFila
         primeiroFila = paciente
         return
     
     atual = primeiroFila
-    
     while atual.proximo is not None and atual.proximo.cor == "A":   
         atual = atual.proximo
         
     paciente.proximo = atual.proximo
     atual.proximo = paciente
         
-def inserirCor():
+def inserir():
     global contadorVerde, contadorAmarelo, primeiroFila
 
     while True:
         cor = (
-            input("\nDigite a cor (V para verde, A para amarelo): ")
+            input("\nDigite a cor (V para verde [sem prioridade], A para amarelo [com prioridade]): ")
             .strip()
             .upper()
         )
@@ -57,15 +57,13 @@ def inserirCor():
 
     if primeiroFila is None:
         primeiroFila = novoPaciente
-        print(
-            f"\nPaciente {novoPaciente.numero}-{novoPaciente.cor} inserido na fila."
-        )
     else:
         if cor == "V":
-            inserirVerde(novoPaciente)
+            inserirSemPrioridade(novoPaciente)
         else:
-            inserirAmarelo(novoPaciente)
-        print(f"\nPaciente {novoPaciente.numero}-{novoPaciente.cor} inserido na fila.")
+            inserirComPrioridade(novoPaciente)
+            
+    print(f"\nPaciente {novoPaciente.numero}-{novoPaciente.cor} inserido na fila.")
         
 def imprimirListaEspera():
     global primeiroFila
@@ -74,11 +72,13 @@ def imprimirListaEspera():
         print("\nA fila de espera está vazia.")
         return
 
-    else:
-        atual = primeiroFila
+    atual = primeiroFila
+    
+    print("_" * 37)
+    print("\nPacientes na fila de espera:")
     
     while atual is not None:
-        print(f"Paciente {atual.numero} - {atual.cor}")
+        print(f"\nPaciente {atual.numero} - {atual.cor}")
         atual = atual.proximo
 
 def atenderPaciente():
@@ -96,17 +96,18 @@ def atenderPaciente():
 
 def menu():
     while True:
-        print("\n" + "_"*37)
+        print("_"*37)
         print("\n*** SISTEMA DE TRIAGEM HOSPITALAR ***")
         print("\n1 – Adicionar paciente à fila")
         print("2 – Mostrar pacientes na fila")
         print("3 – Chamar paciente")
         print("4 – Fechar programa")
+        print("_"*37)
         
         opcao = input("\nEscolha uma opção: ").strip()
         
         if opcao == "1":
-            inserirCor()
+            inserir()
         elif opcao == "2":
             imprimirListaEspera()
         elif opcao == "3":
