@@ -19,7 +19,7 @@ def inserirVerde(paciente):
 def inserirAmarelo(paciente):
     global primeiroFila
 
-    if primeiroFila is None:
+    if primeiroFila.cor is None:
         primeiroFila = paciente
         return
     
